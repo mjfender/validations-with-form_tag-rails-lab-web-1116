@@ -10,9 +10,15 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
 
-    @post.update(post_params)
-
-    redirect_to post_path(@post)
+    @pending = Post.new(post_params)
+    @pending.id = @post.id
+    if @pending.valid?
+      @post.update(post_params)
+      redirect_to post_path(@post)
+    else 
+      @post = @pending
+      render :edit
+    end
   end
 
   private
